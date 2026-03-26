@@ -1,45 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>API Testing & Monitoring Tool</title>
+    <title>API Testing Tool</title>
     <link rel="stylesheet" href="style.css">
-
-    <!-- 📊 Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-<div class="container">
+<div class="app">
 
-    <h1>🚀 API Testing Tool</h1>
+    <!-- LEFT SIDE -->
+    <div class="left-panel">
+        <h2>🚀 API Tester</h2>
 
-    <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
+        <button onclick="toggleDarkMode()">🌙 Dark</button>
 
-    <input type="text" id="url" placeholder="Enter API URL">
+        <input type="text" id="url" placeholder="Enter API URL">
 
-    <select id="method">
-        <option value="GET">GET</option>
-        <option value="POST">POST</option>
-    </select>
+        <select id="method">
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+        </select>
 
-    <textarea id="body" placeholder="Enter JSON body"></textarea>
+        <textarea id="body" placeholder="Enter JSON body"></textarea>
 
-    <button onclick="testAPI()">Send Request</button>
-    <button onclick="clearResult()">Clear</button>
+        <div class="btn-group">
+            <button onclick="testAPI()">Send</button>
+            <button onclick="clearResult()">Clear</button>
+            <button onclick="copyResponse()">Copy</button>
+            <button onclick="downloadResponse()">Download</button>
+        </div>
+    </div>
 
-    <p id="loading"></p>
+    <!-- RIGHT SIDE -->
+    <div class="right-panel">
 
-    <pre id="result"></pre>
+        <!-- Tabs -->
+        <div class="tabs">
+            <button onclick="showTab('response')">Response</button>
+            <button onclick="showTab('graph')">Graph</button>
+            <button onclick="showTab('history')">History</button>
+        </div>
 
-    <h3>📊 Response Time Graph</h3>
-    <canvas id="responseChart"></canvas>
+        <!-- RESPONSE TAB -->
+        <div id="response" class="tab-content">
+            <p id="loading"></p>
+            <pre id="result"></pre>
+        </div>
 
-    <h3>📜 API History</h3>
-    <ul id="historyList"></ul>
+        <!-- GRAPH TAB -->
+        <div id="graph" class="tab-content" style="display:none;">
+            <canvas id="responseChart"></canvas>
+        </div>
+
+        <!-- HISTORY TAB -->
+        <div id="history" class="tab-content" style="display:none;">
+            <ul id="historyList"></ul>
+        </div>
+
+    </div>
 
 </div>
 
-<!-- 🧠 Script -->
 <script src="script.js"></script>
 
 </body>

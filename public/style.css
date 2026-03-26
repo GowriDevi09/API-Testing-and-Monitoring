@@ -1,78 +1,67 @@
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background: #f4f6f8;
     margin: 0;
-    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-/* 🌟 Container */
-.container {
-    width: 80%;
-    margin: 40px auto;
-    padding: 25px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+/* Layout */
+.app {
+    display: flex;
+    height: 100vh;
 }
 
-/* 🔥 Title */
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
+/* LEFT PANEL */
+.left-panel {
+    width: 30%;
+    padding: 20px;
+    background: #f4f4f4;
 }
 
-/* ✨ Inputs */
-input, select, textarea {
+.left-panel input,
+.left-panel select,
+.left-panel textarea {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     margin: 10px 0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 14px;
 }
 
-/* 🚀 Buttons */
+/* RIGHT PANEL */
+.right-panel {
+    width: 70%;
+    padding: 20px;
+}
+
+/* Buttons */
 button {
-    padding: 10px 18px;
-    margin: 8px 5px;
-    border: none;
-    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 5px;
     background: #ff6c37;
     color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-button:hover {
-    background: #e65a28;
-}
-
-/* 📊 Result Box */
-pre {
-    background: #1e1e1e;
-    color: #00ff88;
-    padding: 15px;
-    border-radius: 8px;
-    overflow-x: auto;
-}
-
-/* 📜 History */
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-li {
-    background: #eee;
-    margin: 5px 0;
-    padding: 8px;
+    border: none;
     border-radius: 6px;
     cursor: pointer;
 }
 
-li:hover {
+/* Tabs */
+.tabs {
+    margin-bottom: 10px;
+}
+
+.tabs button {
     background: #ddd;
+    color: black;
+}
+
+.tab-content {
+    height: 80vh;
+    overflow: auto;
+}
+
+/* Response */
+pre {
+    background: #1e1e1e;
+    color: #00ff88;
+    padding: 10px;
+    border-radius: 6px;
 }
 
 /* 🌙 Dark Mode */
@@ -81,35 +70,10 @@ li:hover {
     color: white;
 }
 
-.dark .container {
+.dark .left-panel {
     background: #1e1e1e;
-}
-
-.dark input,
-.dark select,
-.dark textarea {
-    background: #333;
-    color: white;
-    border: 1px solid #555;
 }
 
 .dark pre {
     background: black;
-    color: #00ff88;
-}
-
-.dark li {
-    background: #2a2a2a;
-}
-
-.dark li:hover {
-    background: #444;
-}
-.container {
-    animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-    from {opacity: 0; transform: translateY(10px);}
-    to {opacity: 1; transform: translateY(0);}
 }
