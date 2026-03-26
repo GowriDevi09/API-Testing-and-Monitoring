@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Testing Tool</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>API Testing Tool</h1>
+
+<input type="text" id="url" placeholder="Enter API URL">
+<br><br>
+
+<select id="method">
+    <option value="GET">GET</option>
+    <option value="POST">POST</option>
+</select>
+<br><br>
+
+<button onclick="testAPI()">Send Request</button>
+
+<p id="loading"></p>
+
+<pre id="result"></pre>
+
+<script src="script.js"></script>
+
+</body>
+</html>
