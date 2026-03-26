@@ -41,7 +41,7 @@ async function testAPI() {
     }
 
     saveHistory(url);
-
+console.log("API DATA:", data);
     loading.innerText = "⏳ Testing API...";
     resultBox.innerText = "";
 
@@ -63,8 +63,13 @@ async function testAPI() {
             body: JSON.stringify({ url, method, body: bodyData })
         });
 
-        const data = await response.json();
-        loading.innerText = "";
+        let data;
+
+try {
+    data = await response.json();
+} catch {
+    data = await response.text();
+}
 
         requestCount++;
 
