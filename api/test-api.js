@@ -9,13 +9,20 @@ export default async function handler(req, res) {
                 method: method || "GET"
             });
 
-            const data = await response.json();
+            let data;
+
+            try {
+                data = await response.json();
+            } catch {
+                data = await response.text();
+            }
+
             const end = Date.now();
 
             res.status(200).json({
                 status: response.status,
                 time: end - start,
-                data: data.substring(0, 500) // limit output
+                data: data
             });
 
         } catch (error) {
@@ -24,7 +31,5 @@ export default async function handler(req, res) {
                 message: "API request failed"
             });
         }
-    } else {
-        res.status(405).json({ message: "Method Not Allowed" });
     }
 }
