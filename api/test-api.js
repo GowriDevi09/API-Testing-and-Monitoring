@@ -1,12 +1,16 @@
 export default async function handler(req, res) {
     if (req.method === "POST") {
         try {
-            const { url, method } = req.body;
+            const { url, method, body } = req.body;
 
             const start = Date.now();
 
             const response = await fetch(url, {
-                method: method || "GET"
+                method: method,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: method === "POST" ? JSON.stringify(body) : undefined
             });
 
             let data;
@@ -22,14 +26,16 @@ export default async function handler(req, res) {
             res.status(200).json({
                 status: response.status,
                 time: end - start,
-                data: Array.isArray(data) ? data.slice(0, 5) : data
+                data: data
             });
 
         } catch (error) {
             res.status(500).json({
                 status: "Error",
-                message: "API request failed"
+                message: error.message
             });
         }
+    } else {
+        res.status(405).json({ message: "Method Not Allowed" });
     }
 }
