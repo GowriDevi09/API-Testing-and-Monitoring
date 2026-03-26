@@ -3,11 +3,9 @@ let responseTimes = [];
 let labels = [];
 let chart;
 
-// 💾 Load history
 let apiHistory = JSON.parse(localStorage.getItem("history")) || [];
 let requestCount = 0;
 
-// 🧠 Page load
 window.onload = function () {
     displayHistory();
 
@@ -26,7 +24,7 @@ window.onload = function () {
     });
 };
 
-// 🚀 Main API function
+// 🚀 MAIN FUNCTION
 async function testAPI() {
     const url = document.getElementById("url").value;
     const method = document.getElementById("method").value;
@@ -41,7 +39,7 @@ async function testAPI() {
     }
 
     saveHistory(url);
-console.log("API DATA:", data);
+
     loading.innerText = "⏳ Testing API...";
     resultBox.innerText = "";
 
@@ -65,43 +63,42 @@ console.log("API DATA:", data);
 
         let data;
 
-try {
-    data = await response.json();
-} catch {
-    data = await response.text();
-}
+        try {
+            data = await response.json();
+        } catch {
+            data = await response.text();
+        }
 
+        console.log("API DATA:", data); // ✅ correct place
+
+        loading.innerText = "";
         requestCount++;
 
-        // 🎨 Status color
         const statusColor =
             data.status >= 200 && data.status < 300 ? "#28a745" : "#dc3545";
 
-        // 📊 Speed indicator
         let speed =
             data.time < 200 ? "⚡ Fast" :
             data.time < 500 ? "⏳ Medium" :
             "🐢 Slow";
 
-        // ✅ Success message
         let message =
-    data.status >= 200 && data.status < 300
-        ? "✅ Request Successful"
-        : "❌ Request Failed";
+            data.status >= 200 && data.status < 300
+                ? "✅ Request Successful"
+                : "❌ Request Failed";
 
-        // 📊 Graph update
         responseTimes.push(data.time);
         labels.push("Test " + labels.length);
         chart.update();
 
-        // 📉 Limit large data
-       let displayData = Array.isArray(data.data)
-    ? data.data.slice(0, 3)
-    : data.data;
+        let displayData = Array.isArray(data.data)
+            ? data.data.slice(0, 3)
+            : data.data;
 
-        // 🖥️ UI Output
         resultBox.innerHTML = `
-<div style="margin-bottom:15px; display:flex; align-items:center;">
+<h3>📥 API Response</h3>
+
+<div style="margin-bottom:10px;">
     <strong>Status:</strong> 
     <span style="
         display:inline-block;
@@ -109,26 +106,19 @@ try {
         color:white;
         padding:8px 16px;
         border-radius:8px;
-        font-weight:bold;
         margin-left:10px;
     ">
-    <hr style="border:1px solid #333; margin:15px 0;">
         ${data.status}
     </span>
 </div>
+
 <div>📊 Status Meaning: ${getStatusMeaning(data.status)}</div>
+<div>${message}</div>
 <div>⏱ Time: ${data.time} ms</div>
 <div>⚡ Speed: ${speed}</div>
 <div>📦 Total Requests: ${requestCount}</div>
-<div><strong>Status Meaning:</strong> ${getStatusMeaning(data.status)}</div>
 
-<div>${message}</div>
-
-<div><strong>Time:</strong> ${data.time} ms</div>
-
-<div><strong>Speed:</strong> ${speed}</div>
-
-<div><strong>Total Requests:</strong> ${requestCount}</div>
+<hr style="margin:10px 0;">
 
 <pre>${JSON.stringify(displayData, null, 2)}</pre>
 `;
@@ -136,17 +126,17 @@ try {
     } catch (error) {
         loading.innerText = "";
         resultBox.innerText = "❌ Error connecting to server";
+        console.error(error);
     }
 }
 
-// 💾 Save history
+// 💾 History
 function saveHistory(url) {
     apiHistory.push(url);
     localStorage.setItem("history", JSON.stringify(apiHistory));
     displayHistory();
 }
 
-// 📜 Show history
 function displayHistory() {
     const list = document.getElementById("historyList");
     if (!list) return;
@@ -164,8 +154,15 @@ function displayHistory() {
         list.appendChild(li);
     });
 }
-<h3>📥 API Response</h3>
-// 📥 Download response
+
+// 📋 Copy
+function copyResponse() {
+    const text = document.getElementById("result").innerText;
+    navigator.clipboard.writeText(text);
+    alert("Copied!");
+}
+
+// 📥 Download
 function downloadResponse() {
     const data = document.getElementById("result").innerText;
     const blob = new Blob([data], { type: "application/json" });
@@ -174,34 +171,6 @@ function downloadResponse() {
     a.href = URL.createObjectURL(blob);
     a.download = "response.json";
     a.click();
-}
-
-// 📋 Copy response
-function copyResponse() {
-    const text = document.getElementById("result").innerText;
-    navigator.clipboard.writeText(text);
-    alert("Copied!");
-}
-
-// 🔍 Search
-function searchResponse() {
-    const keyword = document.getElementById("search").value.toLowerCase();
-    const result = document.getElementById("result").innerText;
-
-    if (result.toLowerCase().includes(keyword)) {
-        console.log("Found");
-    }
-}
-
-// 📊 Status meaning
-function getStatusMeaning(status) {
-    if (status === 200) return "OK";
-    if (status === 201) return "Created";
-    if (status === 400) return "Bad Request";
-    if (status === 401) return "Unauthorized";
-    if (status === 404) return "Not Found";
-    if (status === 500) return "Server Error";
-    return "Unknown";
 }
 
 // 🧹 Clear
@@ -214,16 +183,24 @@ function toggleDarkMode() {
     document.body.classList.toggle("dark");
 }
 
-// 🎯 Method UI
-document.getElementById("method").onchange = function () {
-    const bodyField = document.getElementById("body");
+// 📊 Status meaning
+function getStatusMeaning(status) {
+    if (status === 200) return "OK";
+    if (status === 201) return "Created";
+    if (status === 404) return "Not Found";
+    if (status === 500) return "Server Error";
+    return "Unknown";
+}
 
-    bodyField.style.display = this.value === "GET" ? "none" : "block";
-};
+// Tabs
 function showTab(tabName) {
     const tabs = document.querySelectorAll(".tab-content");
-
     tabs.forEach(tab => tab.style.display = "none");
-
     document.getElementById(tabName).style.display = "block";
 }
+
+// Method toggle
+document.getElementById("method").onchange = function () {
+    const bodyField = document.getElementById("body");
+    bodyField.style.display = this.value === "GET" ? "none" : "block";
+};
