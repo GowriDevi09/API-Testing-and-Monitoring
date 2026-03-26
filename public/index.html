@@ -11,53 +11,30 @@
 
 <div class="container">
 
-    <h1>API Testing Tool</h1>
+    <h1>🚀 API Testing Tool</h1>
 
-    <!-- 🌙 Dark Mode -->
-    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+    <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
 
-    <br><br>
-
-    <!-- 🔗 API URL -->
     <input type="text" id="url" placeholder="Enter API URL">
 
-    <br><br>
-
-    <!-- 🔘 Method -->
     <select id="method">
         <option value="GET">GET</option>
         <option value="POST">POST</option>
     </select>
 
-    <br><br>
+    <textarea id="body" placeholder="Enter JSON body"></textarea>
 
-    <!-- 📦 POST Body -->
-    <textarea id="body" placeholder="Enter JSON body (for POST)" rows="5"></textarea>
-
-    <br><br>
-
-    <!-- 🚀 Buttons -->
     <button onclick="testAPI()">Send Request</button>
     <button onclick="clearResult()">Clear</button>
 
-    <br><br>
-
-    <!-- ⏳ Loading -->
     <p id="loading"></p>
 
-    <!-- 📊 Response -->
     <pre id="result"></pre>
 
-    <br><br>
-
-    <!-- 📈 Graph -->
-    <h3>Response Time Graph</h3>
+    <h3>📊 Response Time Graph</h3>
     <canvas id="responseChart"></canvas>
 
-    <br><br>
-
-    <!-- 📜 History -->
-    <h3>API History</h3>
+    <h3>📜 API History</h3>
     <ul id="historyList"></ul>
 
 </div>
