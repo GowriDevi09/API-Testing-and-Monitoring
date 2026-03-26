@@ -1,9 +1,13 @@
-export default async function handler(req, res) {
-    try {
-        if (req.method !== "POST") {
-            return res.status(405).json({ message: "Method Not Allowed" });
-        }
+export const config = {
+  runtime: 'nodejs'
+};
 
+export default async function handler(req, res) {
+    if (req.method !== "POST") {
+        return res.status(405).json({ message: "Method Not Allowed" });
+    }
+
+    try {
         const { url, method, body } = req.body;
 
         const start = Date.now();
