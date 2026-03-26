@@ -1,36 +1,44 @@
-body {
-    font-family: Arial;
-    background: #f5f5f5;
-    text-align: center;
-}
+/* 🌙 Dark mode full fix */
 
-.container {
-    width: 80%;
-    margin: auto;
-    padding: 20px;
-    background: white;
-    border-radius: 10px;
-}
-
-input, select, textarea {
-    width: 80%;
-    padding: 10px;
-    margin: 10px;
-}
-
-button {
-    padding: 10px 20px;
-    margin: 5px;
-    border: none;
-    background: #ff6c37;
+.dark {
+    background-color: #121212;
     color: white;
-    border-radius: 5px;
 }
 
-pre {
-    text-align: left;
-    background: #222;
+/* Container */
+.dark .container {
+    background-color: #1e1e1e;
+}
+
+/* Inputs */
+.dark input,
+.dark select,
+.dark textarea {
+    background-color: #333;
+    color: white;
+    border: 1px solid #555;
+}
+
+/* Buttons */
+.dark button {
+    background-color: #ff6c37;
+    color: white;
+}
+
+/* Result box */
+.dark pre {
+    background-color: #000;
     color: #0f0;
-    padding: 10px;
-    overflow: auto;
+}
+
+/* History list */
+.dark li {
+    background-color: #2a2a2a;
+    color: white;
+}
+
+.dark li:hover {
+    background-color: #444;
+}\body {
+    transition: 0.3s;
 }
