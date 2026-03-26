@@ -6,6 +6,7 @@ let chart;
 let apiHistory = JSON.parse(localStorage.getItem("history")) || [];
 let requestCount = 0;
 
+// 🧠 Page load
 window.onload = function () {
     displayHistory();
 
@@ -69,7 +70,7 @@ async function testAPI() {
             data = await response.text();
         }
 
-        console.log("API DATA:", data); // ✅ correct place
+        console.log("API DATA:", data);
 
         loading.innerText = "";
         requestCount++;
@@ -98,7 +99,7 @@ async function testAPI() {
         resultBox.innerHTML = `
 <h3>📥 API Response</h3>
 
- <div style="margin-bottom:10px;">
+<div style="margin-bottom:10px;">
     <strong>Status:</strong> 
     <span style="color:${statusColor}; font-size:18px; font-weight:bold;">
         ${data.status}
@@ -107,13 +108,15 @@ async function testAPI() {
 
 <div>📊 Status Meaning: ${getStatusMeaning(data.status)}</div>
 <div>${message}</div>
-<div>⏱ Time: ${data.time} ms</div>
+<div>⏱ Time: ${data.time || "N/A"} ms</div>
 <div>⚡ Speed: ${speed}</div>
 <div>📦 Total Requests: ${requestCount}</div>
 
 <hr style="margin:10px 0;">
 
-<pre>${JSON.stringify(displayData, null, 2)}</pre>
+<div style="margin-top:10px;">
+    ${formatData(displayData)}
+</div>
 `;
 
     } catch (error) {
@@ -123,13 +126,14 @@ async function testAPI() {
     }
 }
 
-// 💾 History
+// 💾 Save history
 function saveHistory(url) {
     apiHistory.push(url);
     localStorage.setItem("history", JSON.stringify(apiHistory));
     displayHistory();
 }
 
+// 📜 Show history
 function displayHistory() {
     const list = document.getElementById("historyList");
     if (!list) return;
@@ -148,14 +152,14 @@ function displayHistory() {
     });
 }
 
-// 📋 Copy
+// 📋 Copy response
 function copyResponse() {
     const text = document.getElementById("result").innerText;
     navigator.clipboard.writeText(text);
     alert("Copied!");
 }
 
-// 📥 Download
+// 📥 Download response
 function downloadResponse() {
     const data = document.getElementById("result").innerText;
     const blob = new Blob([data], { type: "application/json" });
@@ -166,7 +170,7 @@ function downloadResponse() {
     a.click();
 }
 
-// 🧹 Clear
+// 🧹 Clear result
 function clearResult() {
     document.getElementById("result").innerText = "";
 }
@@ -180,20 +184,39 @@ function toggleDarkMode() {
 function getStatusMeaning(status) {
     if (status === 200) return "OK";
     if (status === 201) return "Created";
+    if (status === 400) return "Bad Request";
+    if (status === 401) return "Unauthorized";
     if (status === 404) return "Not Found";
     if (status === 500) return "Server Error";
     return "Unknown";
 }
 
-// Tabs
+// 🔄 Tabs
 function showTab(tabName) {
     const tabs = document.querySelectorAll(".tab-content");
     tabs.forEach(tab => tab.style.display = "none");
     document.getElementById(tabName).style.display = "block";
 }
 
-// Method toggle
+// 🎯 Method toggle
 document.getElementById("method").onchange = function () {
     const bodyField = document.getElementById("body");
     bodyField.style.display = this.value === "GET" ? "none" : "block";
 };
+
+// 🔥 Convert JSON → normal text
+function formatData(data) {
+    if (Array.isArray(data)) {
+        return data.map(item => formatObject(item)).join("<hr>");
+    } else {
+        return formatObject(data);
+    }
+}
+
+function formatObject(obj) {
+    return Object.entries(obj)
+        .map(([key, value]) => {
+            return `<div><strong>${key}:</strong> ${value}</div>`;
+        })
+        .join("");
+}
