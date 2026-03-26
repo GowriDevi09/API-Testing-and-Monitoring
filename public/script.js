@@ -98,16 +98,9 @@ async function testAPI() {
         resultBox.innerHTML = `
 <h3>📥 API Response</h3>
 
-<div style="margin-bottom:10px;">
+ <div style="margin-bottom:10px;">
     <strong>Status:</strong> 
-    <span style="
-        display:inline-block;
-        background:${statusColor};
-        color:white;
-        padding:8px 16px;
-        border-radius:8px;
-        margin-left:10px;
-    ">
+    <span style="color:${statusColor}; font-size:18px; font-weight:bold;">
         ${data.status}
     </span>
 </div>
