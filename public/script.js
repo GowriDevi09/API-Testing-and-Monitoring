@@ -99,18 +99,16 @@ async function testAPI() {
         resultBox.innerHTML = `
 <h3>📥 API Response</h3>
 
-<div style="margin-bottom:10px;">
-    <strong>Status:</strong> 
-    <span style="color:${statusColor}; font-size:18px; font-weight:bold;">
+<div style="margin-bottom:8px; display:flex; align-items:center;">
+    <strong>Status:</strong>
+    <span style="color:${statusColor}; font-size:18px; font-weight:bold; margin-left:8px;">
         ${data.status}
     </span>
 </div>
-
-<div>📊 Status Meaning: ${getStatusMeaning(data.status)}</div>
-<div>${message}</div>
-<div>⏱ Time: ${data.time || "N/A"} ms</div>
-<div>⚡ Speed: ${speed}</div>
-<div>📦 Total Requests: ${requestCount}</div>
+<div style="margin:5px 0;">📊 Status Meaning: ${getStatusMeaning(data.status)}</div>
+<div style="margin:5px 0;">⏱ Time: ${data.time || "N/A"} ms</div>
+<div style="margin:5px 0;">⚡ Speed: ${speed}</div>
+<div style="margin:5px 0;">📦 Total Requests: ${requestCount}</div>
 
 <hr style="margin:10px 0;">
 
