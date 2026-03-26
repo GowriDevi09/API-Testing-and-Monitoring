@@ -22,7 +22,7 @@ export default async function handler(req, res) {
             res.status(200).json({
                 status: response.status,
                 time: end - start,
-                data: data
+                data: Array.isArray(data) ? data.slice(0, 5) : data
             });
 
         } catch (error) {
