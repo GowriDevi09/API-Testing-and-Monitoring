@@ -9,7 +9,7 @@ export default async function handler(req, res) {
                 method: method || "GET"
             });
 
-            const data = await response.text();
+            const data = await response.json();
             const end = Date.now();
 
             res.status(200).json({
