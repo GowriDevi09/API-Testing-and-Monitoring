@@ -80,9 +80,9 @@ async function testAPI() {
 
         // ✅ Success message
         let message =
-            data.status >= 200 && data.status < 300
-                ? "✅ Request Successful"
-                : "❌ Request Failed";
+    data.status >= 200 && data.status < 300
+        ? "✅ Request Successful"
+        : "❌ Request Failed";
 
         // 📊 Graph update
         responseTimes.push(data.time);
@@ -90,27 +90,31 @@ async function testAPI() {
         chart.update();
 
         // 📉 Limit large data
-        let displayData = Array.isArray(data.data)
-            ? data.data.slice(0, 5)
-            : data.data;
+       let displayData = Array.isArray(data.data)
+    ? data.data.slice(0, 3)
+    : data.data;
 
         // 🖥️ UI Output
         resultBox.innerHTML = `
-<div style="margin-bottom:10px;">
+<div style="margin-bottom:15px; display:flex; align-items:center;">
     <strong>Status:</strong> 
     <span style="
         display:inline-block;
         background:${statusColor};
         color:white;
-        padding:6px 12px;
-        border-radius:6px;
+        padding:8px 16px;
+        border-radius:8px;
         font-weight:bold;
         margin-left:10px;
     ">
+    <hr style="border:1px solid #333; margin:15px 0;">
         ${data.status}
     </span>
 </div>
-
+<div>📊 Status Meaning: ${getStatusMeaning(data.status)}</div>
+<div>⏱ Time: ${data.time} ms</div>
+<div>⚡ Speed: ${speed}</div>
+<div>📦 Total Requests: ${requestCount}</div>
 <div><strong>Status Meaning:</strong> ${getStatusMeaning(data.status)}</div>
 
 <div>${message}</div>
@@ -155,7 +159,7 @@ function displayHistory() {
         list.appendChild(li);
     });
 }
-
+<h3>📥 API Response</h3>
 // 📥 Download response
 function downloadResponse() {
     const data = document.getElementById("result").innerText;

@@ -58,10 +58,12 @@ button {
 
 /* Response */
 pre {
-    background: #1e1e1e;
+    background: #000;
     color: #00ff88;
-    padding: 10px;
-    border-radius: 6px;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    max-height: 300px;
 }
 
 /* 🌙 Dark Mode */
