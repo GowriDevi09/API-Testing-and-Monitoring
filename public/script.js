@@ -80,8 +80,8 @@ async function testAPI() {
             data.status >= 200 && data.status < 300 ? "#28a745" : "#dc3545";
 
         let speed =
-    data.time < 500 ? "⚡ Fast" :
-    data.time < 1500 ? "⏳ Medium" :
+    data.time < 2000 ? "⚡ Fast" :
+    data.time < 4000 ? "⏳ Medium" :
     "🐢 Slow";
 
         let message =
