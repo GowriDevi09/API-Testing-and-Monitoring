@@ -2,6 +2,7 @@
 let responseTimes = [];
 let labels = [];
 let chart;
+let collectionData = [];
 
 let apiHistory = JSON.parse(localStorage.getItem("history")) || [];
 let requestCount = 0;
@@ -217,4 +218,52 @@ function formatObject(obj) {
             return `<div><strong>${key}:</strong> ${value}</div>`;
         })
         .join("");
+}
+function importCollection() {
+    const file = document.getElementById("importFile").files[0];
+
+    if (!file) {
+        alert("Please select a file");
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        const data = JSON.parse(event.target.result);
+
+        collectionData = data.item; // store APIs
+
+        displayCollection(); // call next function
+    };
+
+    reader.readAsText(file);
+}
+function displayCollection() {
+    const apiList = document.getElementById("apiList");
+    apiList.innerHTML = "";
+
+    collectionData.forEach((api, index) => {
+        const btn = document.createElement("button");
+        btn.innerText = api.name;
+
+        btn.onclick = () => loadAPI(index);
+
+        apiList.appendChild(btn);
+    });
+}
+function loadAPI(index) {
+    const api = collectionData[index];
+
+    const url =
+        typeof api.request.url === "string"
+            ? api.request.url
+            : api.request.url.raw;
+
+    document.getElementById("url").value = url;
+    document.getElementById("method").value = api.request.method;
+
+    if (api.request.body && api.request.body.raw) {
+        document.getElementById("body").value = api.request.body.raw;
+    }
 }

@@ -16,7 +16,12 @@
         <button onclick="toggleDarkMode()">🌙 Dark</button>
 
         <input type="text" id="url" placeholder="Enter API URL">
+<input type="file" id="importFile" accept=".json" />
+<button onclick="importCollection()">Import Collection</button>
+<input type="file" id="importFile" accept=".json">
+<button onclick="importCollection()">Import Postman</button>
 
+<div id="apiList"></div>
         <select id="method">
             <option value="GET">GET</option>
             <option value="POST">POST</option>
