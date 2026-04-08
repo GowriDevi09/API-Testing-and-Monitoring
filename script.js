@@ -105,7 +105,7 @@ async function testAPI() {
             <hr>
 
             <div class="response-data">
-                <pre>${JSON.stringify(data.data, null, 2)}</pre>
+                <pre>${formatPrettyData(data.data)}</pre>
             </div>
         </div>
         `;
@@ -196,4 +196,23 @@ function downloadResponse() {
     a.href = URL.createObjectURL(blob);
     a.download = "response.txt";
     a.click();
+}
+function formatPrettyData(data) {
+    if (Array.isArray(data)) {
+        return data.map(item => {
+            return `
+ID: ${item.id}
+Name: ${item.name}
+Username: ${item.username}
+Email: ${item.email}
+City: ${item.address?.city}
+Phone: ${item.phone}
+Website: ${item.website}
+Company: ${item.company?.name}
+----------------------------------
+`;
+        }).join("\n");
+    }
+
+    return JSON.stringify(data, null, 2);
 }
