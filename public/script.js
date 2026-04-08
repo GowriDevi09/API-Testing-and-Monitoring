@@ -97,24 +97,31 @@ async function testAPI() {
             ? data.data.slice(0, 3)
             : data.data;
 
-        resultBox.innerHTML = `
-<h3>📥 API Response</h3>
+resultBox.innerHTML = `
+<div class="response-card">
 
-<div style="margin-bottom:8px; display:flex; align-items:center;">
-    <strong>Status:</strong>
-    <span style="color:${statusColor}; font-size:18px; font-weight:bold; margin-left:8px;">
-        ${data.status}
-    </span>
-</div>
-<div style="margin:5px 0;">📊 Status Meaning: ${getStatusMeaning(data.status)}</div>
-<div style="margin:5px 0;">⏱ Time: ${data.time || "N/A"} ms</div>
-<div style="margin:5px 0;">⚡ Speed: ${speed}</div>
-<div style="margin:5px 0;">📦 Total Requests: ${requestCount}</div>
+    <h3>📥 API Response</h3>
 
-<hr style="margin:10px 0;">
+    <div class="status-row">
+        <span>Status</span>
+        <span class="status ${data.status >= 200 && data.status < 300 ? 'success' : 'error'}">
+            ${data.status}
+        </span>
+    </div>
 
-<div style="margin-top:10px;">
-    ${formatData(displayData)}
+    <div class="info-grid">
+        <div>📊 ${getStatusMeaning(data.status)}</div>
+        <div>⏱ ${data.time} ms</div>
+        <div>⚡ ${speed}</div>
+        <div>📦 Requests: ${requestCount}</div>
+    </div>
+
+    <hr>
+
+    <div class="response-data">
+        ${formatData(displayData)}
+    </div>
+
 </div>
 `;
 

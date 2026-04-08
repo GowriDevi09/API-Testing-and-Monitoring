@@ -79,3 +79,48 @@ pre {
 .dark pre {
     background: black;
 }
+.response-card {
+    background: #111;
+    color: #e5e5e5;
+    padding: 16px;
+    border-radius: 10px;
+    font-family: monospace;
+}
+
+.response-card h3 {
+    margin-bottom: 10px;
+    color: #00ffcc;
+}
+
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.status {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.status.success {
+    background: #1e3a2f;
+    color: #00ff88;
+}
+
+.status.error {
+    background: #3a1e1e;
+    color: #ff4d4d;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.response-data {
+    margin-top: 10px;
+}
