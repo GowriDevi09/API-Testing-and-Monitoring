@@ -132,3 +132,25 @@ async function testAPI() {
         console.error(error);
     }
 }
+function toggleDarkMode() {
+    document.body.classList.toggle("dark");
+}
+function showTab(tabName) {
+    document.querySelectorAll(".tab-content").forEach(tab => {
+        tab.style.display = "none";
+    });
+
+    document.getElementById(tabName).style.display = "block";
+}
+function displayHistory() {
+    const history = JSON.parse(localStorage.getItem("history")) || [];
+    const list = document.getElementById("historyList");
+
+    list.innerHTML = "";
+
+    history.forEach(item => {
+        const li = document.createElement("li");
+        li.innerText = item;
+        list.appendChild(li);
+    });
+}
