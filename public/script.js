@@ -102,29 +102,22 @@ resultBox.innerHTML = `
 
     <h3>📥 API Response</h3>
 
-    <div class="status-row">
+    <div class="top-row">
         <span>Status</span>
         <span class="status ${data.status >= 200 && data.status < 300 ? 'success' : 'error'}">
             ${data.status}
         </span>
     </div>
 
-    <div class="info-grid">
+    <div class="info-row">
         <div>📊 ${getStatusMeaning(data.status)}</div>
         <div>⏱ ${data.time} ms</div>
         <div>⚡ ${speed}</div>
-        <div>📦 Requests: ${requestCount}</div>
-    </div>
-
-    <hr>
-
-    <div class="response-data">
-        ${formatData(displayData)}
+        <div>📦 ${requestCount}</div>
     </div>
 
 </div>
 `;
-
     } catch (error) {
         loading.innerText = "";
         resultBox.innerText = "❌ Error connecting to server";
