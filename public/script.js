@@ -222,7 +222,11 @@ function formatData(data) {
 function formatObject(obj) {
     return Object.entries(obj)
         .map(([key, value]) => {
-            return `<div><strong>${key}:</strong> ${value}</div>`;
+            return `<div><strong>${key}:</strong> ${
+    typeof value === "object"
+        ? JSON.stringify(value, null, 2)
+        : value
+}</div>`;
         })
         .join("");
 }
