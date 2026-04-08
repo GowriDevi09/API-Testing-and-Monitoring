@@ -116,6 +116,13 @@ resultBox.innerHTML = `
         <div>📦 ${requestCount}</div>
     </div>
 
+    <hr>
+
+    <!-- 🔥 ADD THIS BACK -->
+    <div class="response-data">
+        ${formatData(displayData)}
+    </div>
+
 </div>
 `;
     } catch (error) {
