@@ -1,27 +1,23 @@
-export const config = {
-  runtime: 'nodejs'
-};
-
 export default async function handler(req, res) {
+
     if (req.method !== "POST") {
-        return res.status(405).json({ message: "Method Not Allowed" });
+        return res.status(405).json({ message: "Only POST allowed" });
     }
 
-    try {
-        const { url, method, body } = req.body;
+    const { url, method, body } = req.body;
 
+    try {
         const start = Date.now();
-        await new Promise(resolve => setTimeout(resolve, 3000));
+
         const response = await fetch(url, {
-            method: method || "GET",
+            method: method,
             headers: {
                 "Content-Type": "application/json"
             },
-            body: method === "POST" ? JSON.stringify(body) : undefined
+            body: method !== "GET" ? JSON.stringify(body) : undefined
         });
 
         let data;
-
         try {
             data = await response.json();
         } catch {
@@ -30,16 +26,13 @@ export default async function handler(req, res) {
 
         const end = Date.now();
 
-        return res.status(200).json({
+        res.status(200).json({
             status: response.status,
             time: end - start,
             data: data
         });
 
     } catch (error) {
-        return res.status(500).json({
-            status: "Error",
-            message: error.message
-        });
+        res.status(500).json({ message: "API failed" });
     }
 }

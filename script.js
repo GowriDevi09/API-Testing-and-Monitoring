@@ -1,32 +1,32 @@
-// 📊 Graph setup
 let responseTimes = [];
 let labels = [];
 let chart;
 let collectionData = [];
-
-let apiHistory = JSON.parse(localStorage.getItem("history")) || [];
 let requestCount = 0;
 
-// 🧠 Page load
+// LOAD
 window.onload = function () {
     displayHistory();
 
-    const ctx = document.getElementById("responseChart").getContext("2d");
+    const canvas = document.getElementById("responseChart");
+    if (canvas) {
+        const ctx = canvas.getContext("2d");
 
-    chart = new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: labels,
-            datasets: [{
-                label: "Response Time (ms)",
-                data: responseTimes,
-                borderWidth: 2
-            }]
-        }
-    });
+        chart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Response Time (ms)",
+                    data: responseTimes,
+                    borderWidth: 2
+                }]
+            }
+        });
+    }
 };
 
-// 🚀 MAIN FUNCTION
+// MAIN FUNCTION
 async function testAPI() {
     const url = document.getElementById("url").value;
     const method = document.getElementById("method").value;
@@ -46,16 +46,14 @@ async function testAPI() {
     resultBox.innerHTML = "";
 
     let bodyData;
-
     try {
         bodyData = bodyInput ? JSON.parse(bodyInput) : null;
     } catch {
-        alert("Invalid JSON body!");
+        alert("Invalid JSON!");
         return;
     }
 
     try {
-        // 🔥 FRONTEND TIMER START
         const start = performance.now();
 
         const response = await fetch("/api/test-api", {
@@ -66,87 +64,84 @@ async function testAPI() {
             body: JSON.stringify({ url, method, body: bodyData })
         });
 
-        const end = performance.now(); // 🔥 END TIMER
-        const frontendTime = Math.round(end - start);
-
-        let data;
-
-        try {
-            data = await response.json();
-        } catch {
-            data = await response.text();
+        if (!response.ok) {
+            throw new Error(await response.text());
         }
 
-        console.log("API DATA:", data);
+        const data = await response.json();
+
+        const end = performance.now();
+        const time = Math.round(end - start);
 
         loading.innerText = "";
         requestCount++;
 
-        // 🔥 SPEED LOGIC (UPDATED)
         let speed =
-            frontendTime < 500 ? "⚡ Fast" :
-            frontendTime < 1500 ? "⏳ Medium" :
+            time < 500 ? "⚡ Fast" :
+            time < 1500 ? "⏳ Medium" :
             "🐢 Slow";
 
-        // GRAPH UPDATE
-        responseTimes.push(frontendTime);
+        responseTimes.push(time);
         labels.push("Test " + labels.length);
-        chart.update();
+        if (chart) chart.update();
 
-        let displayData = Array.isArray(data.data)
-            ? data.data.slice(0, 3)
-            : data.data;
-
-        // 🔥 FINAL UI OUTPUT
         resultBox.innerHTML = `
         <div class="response-card">
-
             <h3>📥 API Response</h3>
 
             <div class="top-row">
                 <span>Status</span>
-                <span class="status ${data.status >= 200 && data.status < 300 ? 'success' : 'error'}">
+                <span class="status ${data.status < 300 ? 'success' : 'error'}">
                     ${data.status}
                 </span>
             </div>
 
             <div class="info-row">
-                <div>📊 ${getStatusMeaning(data.status)}</div>
-                <div>⏱ ${frontendTime} ms</div>
-                <div>⚡ ${speed}</div>
+                <div>⏱ ${time} ms</div>
+                <div>${speed}</div>
                 <div>📦 ${requestCount}</div>
             </div>
 
             <hr>
 
             <div class="response-data">
-                ${formatData(displayData)}
+                <pre>${JSON.stringify(data.data, null, 2)}</pre>
             </div>
-
         </div>
         `;
 
-    } catch (error) {
+    } catch (err) {
         loading.innerText = "";
         resultBox.innerText = "❌ Error connecting to server";
-        console.error(error);
+        console.error(err);
     }
 }
+
+// DARK MODE
 function toggleDarkMode() {
     document.body.classList.toggle("dark");
 }
-function showTab(tabName) {
-    document.querySelectorAll(".tab-content").forEach(tab => {
-        tab.style.display = "none";
-    });
 
-    document.getElementById(tabName).style.display = "block";
+// TABS
+function showTab(tab) {
+    document.querySelectorAll(".tab-content").forEach(t => t.style.display = "none");
+    document.getElementById(tab).style.display = "block";
 }
-function displayHistory() {
-    const history = JSON.parse(localStorage.getItem("history")) || [];
-    const list = document.getElementById("historyList");
 
+// HISTORY
+function saveHistory(url) {
+    let history = JSON.parse(localStorage.getItem("history")) || [];
+    history.unshift(url);
+    history = history.slice(0, 5);
+    localStorage.setItem("history", JSON.stringify(history));
+    displayHistory();
+}
+
+function displayHistory() {
+    const list = document.getElementById("historyList");
     list.innerHTML = "";
+
+    let history = JSON.parse(localStorage.getItem("history")) || [];
 
     history.forEach(item => {
         const li = document.createElement("li");
@@ -154,45 +149,27 @@ function displayHistory() {
         list.appendChild(li);
     });
 }
-function saveHistory(url) {
-    let history = JSON.parse(localStorage.getItem("history")) || [];
 
-    history.unshift(url);
-
-    // keep only last 5
-    history = history.slice(0, 5);
-
-    localStorage.setItem("history", JSON.stringify(history));
-
-    displayHistory();
-}
+// POSTMAN IMPORT
 function importCollection() {
     const file = document.getElementById("importFile").files[0];
-
-    if (!file) {
-        alert("Please select a file");
-        return;
-    }
+    if (!file) return alert("Select file");
 
     const reader = new FileReader();
-
-    reader.onload = function (event) {
-        const data = JSON.parse(event.target.result);
-
+    reader.onload = function (e) {
+        const data = JSON.parse(e.target.result);
         collectionData = data.item || [];
-
         displayCollection();
     };
-
     reader.readAsText(file);
 }
+
 function displayCollection() {
     const apiList = document.getElementById("apiList");
     apiList.innerHTML = "";
 
     collectionData.forEach(api => {
         const btn = document.createElement("button");
-
         btn.innerText = api.name;
 
         btn.onclick = function () {
@@ -202,4 +179,21 @@ function displayCollection() {
 
         apiList.appendChild(btn);
     });
+}
+
+// EXTRA BUTTONS
+function clearResult() {
+    document.getElementById("result").innerHTML = "";
+}
+
+function copyResponse() {
+    navigator.clipboard.writeText(document.getElementById("result").innerText);
+}
+
+function downloadResponse() {
+    const blob = new Blob([document.getElementById("result").innerText]);
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "response.txt";
+    a.click();
 }

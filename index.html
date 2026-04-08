@@ -9,18 +9,20 @@
 
 <div class="app">
 
-    <!-- LEFT SIDE -->
+    <!-- LEFT PANEL -->
     <div class="left-panel">
         <h2>🚀 API Tester</h2>
 
         <button onclick="toggleDarkMode()">🌙 Dark</button>
 
         <input type="text" id="url" placeholder="Enter API URL">
-<input type="file" id="importFile" accept=".json">
-<button onclick="importCollection()">Import Postman Collection</button>
 
-<h4>📂 Imported APIs</h4>
-<div id="apiList"></div>
+        <input type="file" id="importFile" accept=".json">
+        <button onclick="importCollection()">Import Postman Collection</button>
+
+        <h4>📂 Imported APIs</h4>
+        <div id="apiList"></div>
+
         <select id="method">
             <option value="GET">GET</option>
             <option value="POST">POST</option>
@@ -36,28 +38,24 @@
         </div>
     </div>
 
-    <!-- RIGHT SIDE -->
+    <!-- RIGHT PANEL -->
     <div class="right-panel">
 
-        <!-- Tabs -->
         <div class="tabs">
             <button onclick="showTab('response')">Response</button>
             <button onclick="showTab('graph')">Graph</button>
             <button onclick="showTab('history')">History</button>
         </div>
 
-        <!-- RESPONSE TAB -->
         <div id="response" class="tab-content" style="display:block;">
             <p id="loading"></p>
-           <div id="result"></div>
+            <div id="result"></div>
         </div>
 
-        <!-- GRAPH TAB -->
         <div id="graph" class="tab-content" style="display:none;">
             <canvas id="responseChart"></canvas>
         </div>
 
-        <!-- HISTORY TAB -->
         <div id="history" class="tab-content" style="display:none;">
             <ul id="historyList"></ul>
         </div>
@@ -67,6 +65,5 @@
 </div>
 
 <script src="/script.js"></script>
-
 </body>
 </html>
