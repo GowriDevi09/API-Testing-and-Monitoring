@@ -154,3 +154,52 @@ function displayHistory() {
         list.appendChild(li);
     });
 }
+function saveHistory(url) {
+    let history = JSON.parse(localStorage.getItem("history")) || [];
+
+    history.unshift(url);
+
+    // keep only last 5
+    history = history.slice(0, 5);
+
+    localStorage.setItem("history", JSON.stringify(history));
+
+    displayHistory();
+}
+function importCollection() {
+    const file = document.getElementById("importFile").files[0];
+
+    if (!file) {
+        alert("Please select a file");
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+        const data = JSON.parse(event.target.result);
+
+        collectionData = data.item || [];
+
+        displayCollection();
+    };
+
+    reader.readAsText(file);
+}
+function displayCollection() {
+    const apiList = document.getElementById("apiList");
+    apiList.innerHTML = "";
+
+    collectionData.forEach(api => {
+        const btn = document.createElement("button");
+
+        btn.innerText = api.name;
+
+        btn.onclick = function () {
+            document.getElementById("url").value = api.request.url.raw;
+            document.getElementById("method").value = api.request.method;
+        };
+
+        apiList.appendChild(btn);
+    });
+}
