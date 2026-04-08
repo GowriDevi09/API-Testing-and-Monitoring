@@ -11,7 +11,7 @@ export default async function handler(req, res) {
         const { url, method, body } = req.body;
 
         const start = Date.now();
-
+        await new Promise(resolve => setTimeout(resolve, 3000));
         const response = await fetch(url, {
             method: method || "GET",
             headers: {
