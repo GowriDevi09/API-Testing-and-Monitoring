@@ -43,7 +43,7 @@ async function testAPI() {
     saveHistory(url);
 
     loading.innerText = "⏳ Testing API...";
-    resultBox.innerText = "";
+    resultBox.innerHTML = "";
 
     let bodyData;
 
@@ -55,6 +55,9 @@ async function testAPI() {
     }
 
     try {
+        // 🔥 FRONTEND TIMER START
+        const start = performance.now();
+
         const response = await fetch("/api/test-api", {
             method: "POST",
             headers: {
@@ -62,6 +65,9 @@ async function testAPI() {
             },
             body: JSON.stringify({ url, method, body: bodyData })
         });
+
+        const end = performance.now(); // 🔥 END TIMER
+        const frontendTime = Math.round(end - start);
 
         let data;
 
@@ -76,20 +82,14 @@ async function testAPI() {
         loading.innerText = "";
         requestCount++;
 
-        const statusColor =
-            data.status >= 200 && data.status < 300 ? "#28a745" : "#dc3545";
-
+        // 🔥 SPEED LOGIC (UPDATED)
         let speed =
-    data.time < 2000 ? "⚡ Fast" :
-    data.time < 4000 ? "⏳ Medium" :
-    "🐢 Slow";
+            frontendTime < 500 ? "⚡ Fast" :
+            frontendTime < 1500 ? "⏳ Medium" :
+            "🐢 Slow";
 
-        let message =
-            data.status >= 200 && data.status < 300
-                ? "✅ Request Successful"
-                : "❌ Request Failed";
-
-        responseTimes.push(data.time);
+        // GRAPH UPDATE
+        responseTimes.push(frontendTime);
         labels.push("Test " + labels.length);
         chart.update();
 
@@ -97,184 +97,38 @@ async function testAPI() {
             ? data.data.slice(0, 3)
             : data.data;
 
-resultBox.innerHTML = `
-<div class="response-card">
+        // 🔥 FINAL UI OUTPUT
+        resultBox.innerHTML = `
+        <div class="response-card">
 
-    <h3>📥 API Response</h3>
+            <h3>📥 API Response</h3>
 
-    <div class="top-row">
-        <span>Status</span>
-        <span class="status ${data.status >= 200 && data.status < 300 ? 'success' : 'error'}">
-            ${data.status}
-        </span>
-    </div>
+            <div class="top-row">
+                <span>Status</span>
+                <span class="status ${data.status >= 200 && data.status < 300 ? 'success' : 'error'}">
+                    ${data.status}
+                </span>
+            </div>
 
-    <div class="info-row">
-        <div>📊 ${getStatusMeaning(data.status)}</div>
-        <div>⏱ ${data.time} ms</div>
-        <div>⚡ ${speed}</div>
-        <div>📦 ${requestCount}</div>
-    </div>
+            <div class="info-row">
+                <div>📊 ${getStatusMeaning(data.status)}</div>
+                <div>⏱ ${frontendTime} ms</div>
+                <div>⚡ ${speed}</div>
+                <div>📦 ${requestCount}</div>
+            </div>
 
-    <hr>
+            <hr>
 
-    <!-- 🔥 ADD THIS BACK -->
-    <div class="response-data">
-        ${formatData(displayData)}
-    </div>
+            <div class="response-data">
+                ${formatData(displayData)}
+            </div>
 
-</div>
-`;
+        </div>
+        `;
+
     } catch (error) {
         loading.innerText = "";
         resultBox.innerText = "❌ Error connecting to server";
         console.error(error);
-    }
-}
-
-// 💾 Save history
-function saveHistory(url) {
-    apiHistory.push(url);
-    localStorage.setItem("history", JSON.stringify(apiHistory));
-    displayHistory();
-}
-
-// 📜 Show history
-function displayHistory() {
-    const list = document.getElementById("historyList");
-    if (!list) return;
-
-    list.innerHTML = "";
-
-    apiHistory.forEach(item => {
-        const li = document.createElement("li");
-        li.innerText = item;
-
-        li.onclick = () => {
-            document.getElementById("url").value = item;
-        };
-
-        list.appendChild(li);
-    });
-}
-
-// 📋 Copy response
-function copyResponse() {
-    const text = document.getElementById("result").innerText;
-    navigator.clipboard.writeText(text);
-    alert("Copied!");
-}
-
-// 📥 Download response
-function downloadResponse() {
-    const data = document.getElementById("result").innerText;
-    const blob = new Blob([data], { type: "application/json" });
-
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "response.json";
-    a.click();
-}
-
-// 🧹 Clear result
-function clearResult() {
-    document.getElementById("result").innerText = "";
-}
-
-// 🌙 Dark mode
-function toggleDarkMode() {
-    document.body.classList.toggle("dark");
-}
-
-// 📊 Status meaning
-function getStatusMeaning(status) {
-    if (status === 200) return "OK";
-    if (status === 201) return "Created";
-    if (status === 400) return "Bad Request";
-    if (status === 401) return "Unauthorized";
-    if (status === 404) return "Not Found";
-    if (status === 500) return "Server Error";
-    return "Unknown";
-}
-
-// 🔄 Tabs
-function showTab(tabName) {
-    const tabs = document.querySelectorAll(".tab-content");
-    tabs.forEach(tab => tab.style.display = "none");
-    document.getElementById(tabName).style.display = "block";
-}
-
-// 🎯 Method toggle
-document.getElementById("method").onchange = function () {
-    const bodyField = document.getElementById("body");
-    bodyField.style.display = this.value === "GET" ? "none" : "block";
-};
-
-// 🔥 Convert JSON → normal text
-function formatData(data) {
-    if (Array.isArray(data)) {
-        return data.map(item => formatObject(item)).join("<hr>");
-    } else {
-        return formatObject(data);
-    }
-}
-
-function formatObject(obj) {
-    return Object.entries(obj)
-        .map(([key, value]) => {
-            return `<div><strong>${key}:</strong> ${
-    typeof value === "object"
-        ? JSON.stringify(value, null, 2)
-        : value
-}</div>`;
-        })
-        .join("");
-}
-function importCollection() {
-    const file = document.getElementById("importFile").files[0];
-
-    if (!file) {
-        alert("Please select a file");
-        return;
-    }
-
-    const reader = new FileReader();
-
-    reader.onload = function(event) {
-        const data = JSON.parse(event.target.result);
-
-        collectionData = data.item; // store APIs
-
-        displayCollection(); // call next function
-    };
-
-    reader.readAsText(file);
-}
-function displayCollection() {
-    const apiList = document.getElementById("apiList");
-    apiList.innerHTML = "";
-
-    collectionData.forEach((api, index) => {
-        const btn = document.createElement("button");
-        btn.innerText = api.name;
-
-        btn.onclick = () => loadAPI(index);
-
-        apiList.appendChild(btn);
-    });
-}
-function loadAPI(index) {
-    const api = collectionData[index];
-
-    const url =
-        typeof api.request.url === "string"
-            ? api.request.url
-            : api.request.url.raw;
-
-    document.getElementById("url").value = url;
-    document.getElementById("method").value = api.request.method;
-
-    if (api.request.body && api.request.body.raw) {
-        document.getElementById("body").value = api.request.body.raw;
     }
 }
